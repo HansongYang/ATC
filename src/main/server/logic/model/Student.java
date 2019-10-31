@@ -186,6 +186,19 @@ public class Student implements StudentInt {
 		return result;
 	}
 	
+	public boolean completeCourse(Course course) {
+		boolean result = false;
+		if(IsRegistered(course) && !IsCompleted(course)) {
+			result = this.completedCourses.add(course);
+			result = this.registeredCourses.remove(course);
+			logger.info(String.format("Student Operation: student %d completed course %d; State: Success", this.StudentNumber(), course.Code()));
+		} else {
+			result = false;
+			logger.info(String.format("Student Operation: student %d completed course %d; State: Fail; Reason: student hasn't registered this course or student has completed this course", this.StudentNumber(), course.Code()));
+		}
+		return result;
+	}
+	
 	public boolean IsSelected (Course course) {
 		if (selectedCourses.contains(course)) {
 			logger.info(String.format("Student Operation: student %d has selected course %d;", this.StudentNumber(), course.Code()));

@@ -26,6 +26,7 @@ public class OutputHandler {
 	public static final int REGISTERFORCOURSE = 12;
 	public static final int DROPCOURSE = 13;
 	public static final int DEREGISTERCOURSE = 14;
+	public static final int COMPLETECOURSE = 15;
 
 	public Output clerkLogin(String input) {
 		Output output = new Output("", 0);
@@ -63,7 +64,7 @@ public class OutputHandler {
 				result = University.getInstance().LookupStudent(
 						Integer.parseInt(number), name);
 				if (result) {
-					output.setOutput("What can I do for you? Menu: Select Course, Register for Course, Drop Course, Deregister Course.");
+					output.setOutput("What can I do for you? Menu: Select Course, Register for Course, Drop Course, Deregister Course, Complete Course.");
 					University.getInstance().setCurrentstudent(
 							Integer.parseInt(number));
 					output.setState(STUDENT);
@@ -537,6 +538,61 @@ public class OutputHandler {
 					output.setOutput("Unable to deregister from this course!");
 				}
 				output.setState(STUDENT);
+			}
+		}
+		return output;
+	}
+	
+	public Output completeCourse(String input) {
+		Output output = new Output("", 0);
+		String code = input.trim();
+		Pattern pattern = Pattern.compile("[0-9]*");
+		Matcher isNum = pattern.matcher(code);
+		boolean result = true;
+		
+		if (Config.TERM_ENDS) {
+			output.setOutput("Term ends!");
+			output.setState(STUDENT);
+		} else if (!Config.REGISTRATION_STARTS) {
+			output.setOutput("Registration has not started!");
+			output.setState(STUDENT);
+		} else {
+			if (input.replace(" ", "").equalsIgnoreCase("") || !isNum.matches()) {
+				output.setOutput("Your input should be in correct format.");
+				output.setState(DEREGISTERCOURSE);
+			} else if (Integer.parseInt(code) < 100000
+					|| Integer.parseInt(code) > 999999) {
+				output.setOutput("The length of course code must be 6.");
+				output.setState(DEREGISTERCOURSE);
+			} else if (!University.getInstance().CheckCourse(
+					Integer.parseInt(code))) {
+				output.setOutput("The course does not exist!");
+				output.setState(COMPLETECOURSE);
+			} else {
+				int studentnumber = University.getInstance()
+						.getCurrentstudent();
+				Student student = University.getInstance().GetStudent(
+						studentnumber);
+				Course course = University.getInstance().GetCourse(
+						Integer.parseInt(code));
+				result = student.IsRegistered(course);
+				if(result) {
+					result = University.getInstance().MarkStudents(course);
+					if (result) {
+						result = student.completeCourse(course);
+						if(result) {
+							output.setOutput("You have completed this course!");
+						} else {
+							output.setOutput("Unable to complete this course!");
+						}
+					} else {
+						output.setOutput("Unable to complete this course!");
+					}
+					output.setState(STUDENT);
+				} else {
+					output.setOutput("You haven't register this course!");
+					output.setState(COMPLETECOURSE);
+				}
 			}
 		}
 		return output;
