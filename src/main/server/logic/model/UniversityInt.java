@@ -23,6 +23,7 @@ public interface UniversityInt {
 	
 	boolean RegisterStudentForCourse(Student student, Course course);
 	boolean DeRegisterStudentFromCourse(Student student, Course course);
+	boolean dropCourse(Student student, Course course);
 	
 	boolean CancelCourse(Course course);
 	

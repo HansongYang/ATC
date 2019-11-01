@@ -465,6 +465,9 @@ public class OutputHandler {
 		} else if (!Config.REGISTRATION_STARTS) {
 			output.setOutput("Course cannot be dropped before registration starts!");
 			output.setState(STUDENT);
+		} else if (!Config.REGISTRATION_ENDS) {
+			output.setOutput("Course cannot be dropped during registration period!");
+			output.setState(STUDENT);
 		} else if (input.replace(" ", "").equalsIgnoreCase("") || !isNum.matches()) {
 			output.setOutput("Your input should be in correct format.");
 			output.setState(DROPCOURSE);
@@ -480,14 +483,20 @@ public class OutputHandler {
 			int studentnumber = University.getInstance().getCurrentstudent();
 			Student student = (Student) University.getInstance().GetStudent(
 					studentnumber);
-			result = student.DropCourse(University.getInstance().GetCourse(
-					Integer.parseInt(code)));
+			Course course = University.getInstance().GetCourse(
+					Integer.parseInt(code));
+			result = University.getInstance().dropCourse(student, course);
 			if (result) {
 				output.setOutput("Success!");
 			} else {
 				output.setOutput("Unable to drop this course!");
 			}
-			output.setState(STUDENT);
+			if(student.getRegisteredCourses().size() == 0) {//A student doesn't have any course in this term
+				output.setOutput("You don't have any course in this term, so your account will be deleted.");
+				output.setState(WAITING);
+			}else {
+				output.setState(STUDENT);
+			}
 		}
 		return output;
 	}
@@ -543,7 +552,7 @@ public class OutputHandler {
 		return output;
 	}
 	
-	public Output completeCourse(String input) {
+	public Output completeCourse(String input) { //Course completion
 		Output output = new Output("", 0);
 		String code = input.trim();
 		Pattern pattern = Pattern.compile("[0-9]*");

@@ -162,11 +162,11 @@ public class Student implements StudentInt {
 	public boolean DropCourse(Course course) {
 		// TODO Auto-generated method stub
 		boolean result = true;
-		if(!IsSelected(course)||IsRegistered(course)||IsCompleted(course)) {
+		if(IsSelected(course)||!IsRegistered(course)||IsCompleted(course)) {
 			result = false;
 			logger.info(String.format("Student Operation: student %d drop course %d; State: Fail; Reason: student hasn't selected this course or student has completed this course", this.StudentNumber(), course.Code()));
 		} else {
-			result = this.selectedCourses.remove(course);
+			result = this.registeredCourses.remove(course);
 			logger.info(String.format("Student Operation: student %d drop course %d; State: Success", this.StudentNumber(), course.Code()));
 		}
 		return result;
@@ -186,7 +186,7 @@ public class Student implements StudentInt {
 		return result;
 	}
 	
-	public boolean completeCourse(Course course) {
+	public boolean completeCourse(Course course) { //Course completion for this student.
 		boolean result = false;
 		if(IsRegistered(course) && !IsCompleted(course)) {
 			result = this.completedCourses.add(course);

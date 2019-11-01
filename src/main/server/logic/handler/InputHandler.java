@@ -177,7 +177,7 @@ public class InputHandler {
 				oo.setState(state);
 			} else if (input.equalsIgnoreCase("drop course")) {
 				List<Course> availableCourses = new ArrayList<Course>(
-						student.getSelectedCourses());
+						student.getRegisteredCourses());
 				if (availableCourses.size() > 0) {
 					output = "Please Input Course Info: 'course code'\nAvailable Course List: ";
 					for (int i = 0; i < availableCourses.size(); i++) {

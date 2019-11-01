@@ -71,7 +71,7 @@ public class University implements UniversityInt {
 				Config.REGISTRATION_STARTS = true;
 				//System.out.println("registration starts");
 			}
-		}, Config.SIMULATED_DAY * 40);
+		}, Config.SIMULATED_DAY * 20);
 		
 		timer_registrationends.schedule(new TimerTask() {
 			
@@ -81,7 +81,7 @@ public class University implements UniversityInt {
 				Config.REGISTRATION_ENDS = true;
 				//System.out.println("registration ends");
 			}
-		}, Config.SIMULATED_DAY * (200 + 140));
+		}, Config.SIMULATED_DAY * (20 + 14));
 		
 		timer_termends.schedule(new TimerTask() {
 			
@@ -94,7 +94,7 @@ public class University implements UniversityInt {
 				}
 				//System.out.println("term ends");
 			}
-		}, Config.SIMULATED_DAY * (200 + 14 + 84));
+		}, Config.SIMULATED_DAY * (20 + 14 + 84));
 	}
 	
 	private void InitializeCourses() {
@@ -337,7 +337,7 @@ public class University implements UniversityInt {
 			}
 		}
 		*/
-		if (CheckCourse(course.Code()) && CheckStudent(student.StudentNumber()) && student.IsSelected(course) && !course.IsFull()) {
+		if (CheckCourse(course.Code()) && CheckStudent(student.StudentNumber()) && student.IsSelected(course) && !course.IsFull()) { //Checking the cap size of this course
 			result = student.RegisterCourse(course);
 			if (result) {
 				result = course.AddStudent(student);
@@ -371,6 +371,27 @@ public class University implements UniversityInt {
 		return result;
 	}
 
+	@Override
+	public boolean dropCourse(Student student, Course course) { //Correct way for dropping a course
+		boolean result = true;
+		if (CheckCourse(course.Code()) && CheckStudent(student.StudentNumber()) && student.IsRegistered(course)) {
+			result = student.DropCourse(course);
+			if (result) {
+				result = course.RemoveStudent(student);
+				if(student.getRegisteredCourses().size() == 0) { //If this student doesn't have any course in this term, then delete this student.
+					result = DestroyStudent(student);
+				}
+				logger.info(String.format("University Operation: student %d drop course %d; State: Success", student.StudentNumber(), course.Code()));
+			} else {
+				logger.info(String.format("University Operation: student %d drop course %d; State: Fail", student.StudentNumber(), course.Code()));
+			}
+		} else {
+			result = false;
+			logger.info(String.format("University Operation: student %d drop course %d; State: Fail; Reason: The student or course doesn't exist or the student hasn't registered the course.", student.StudentNumber(), course.Code()));
+		}
+		return result;
+	}
+	
 	@Override
 	public boolean CancelCourse(Course course) {
 		// TODO Auto-generated method stub
