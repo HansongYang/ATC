@@ -21,7 +21,8 @@ Feature: Use Case of clerk
 
   @tag3
   Scenario Outline: A Clerk creates a course when registration period opens
-    Given A clerk logs into the ATC successfully and the registration period opens
+    Given The registration period opens
+    And   A clerk logs into the ATC successfully.
     When This clerk enters create course <option>
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
     Then I verify that this course is created or not
@@ -34,7 +35,8 @@ Feature: Use Case of clerk
 
   @tag4
   Scenario Outline: A Clerk creates a course when registration period ends
-    Given A clerk logs into the ATC successfully and the registration period ends
+    Given The registration period ends
+    And  A clerk logs into the ATC successfully.
     When This clerk enters create course <option>
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
     Then I verify that this course is created or not
@@ -47,7 +49,8 @@ Feature: Use Case of clerk
 
   @tag5
   Scenario Outline: A Clerk creates a course (include duplicate course) when registration period hasn't opened yet
-    Given A clerk logs into the ATC successfully and the registration period hasn't opened yet
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
     When This clerk enters create course <option>
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
     Then I verify that this course is created or not
@@ -61,7 +64,7 @@ Feature: Use Case of clerk
 
   @tag6
   Scenario Outline: A Clerk deletes a course when registration period hasn't opened yet
-    Given A clerk logs into the ATC successfully and the registration period hasn't opened yet
+    Given The registration period hasn't opened yet
     When This clerk enters create course <option1>
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
     When This clerk enters delete course <option2>
@@ -76,7 +79,8 @@ Feature: Use Case of clerk
 
   @tag7
   Scenario Outline: A Clerk deletes a course when registration period starts
-    Given A clerk logs into the ATC successfully and the registration period opens
+    Given The registration period opens
+    And A clerk logs into the ATC successfully.
     When This clerk enters create course <option1>
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
     When This clerk enters delete course <option2>
@@ -91,7 +95,8 @@ Feature: Use Case of clerk
 
   @tag8
   Scenario Outline: A Clerk deletes a non-existent course when registration period starts
-    Given A clerk logs into the ATC successfully and the registration period hasn't opened yet
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
     When This clerk enters delete course <option>
     And This clerk enters course code <course code> for deleting course
     Then I verify that this non-existent course is deleted or not
@@ -103,7 +108,8 @@ Feature: Use Case of clerk
 
   @tag9
   Scenario Outline: A Clerk creates a student (include duplicate student) when registration period hasn't open yet
-    Given A clerk logs into the ATC successfully and the registration period hasn't opened yet
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
     When This clerk enters create student <option>
     And This clerk enters student information, such as <student number>, <name> and <is fulltime(y/n)>
     Then I verify that this student is created or not
@@ -117,7 +123,8 @@ Feature: Use Case of clerk
 
   @tag10
   Scenario Outline: A Clerk creates a student after registration period starts and ends
-    Given A clerk logs into the ATC successfully and the registration period opens
+    Given The registration period opens
+    And A clerk logs into the ATC successfully.
     When This clerk enters create student <option>
     And This clerk enters student information, such as <student number>, <name> and <is fulltime(y/n)>
     Then I verify that this student is created or not
@@ -130,7 +137,8 @@ Feature: Use Case of clerk
 
   @tag11
   Scenario Outline: A clerk deletes a student when the registration period hasn't started yet
-    Given A clerk logs into the ATC successfully and the registration period hasn't opened yet
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
     When This clerk enters create student <option>
     And This clerk enters student information, such as <student number>, <name> and <is fulltime(y/n)>
     When This clerk enters delete student <option2>
@@ -145,7 +153,8 @@ Feature: Use Case of clerk
 
   @tag12
   Scenario Outline: A clerk deletes a non-existent student when the registration period hasn't started yet
-    Given A clerk logs into the ATC successfully and the registration period hasn't opened yet
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
     When This clerk enters delete student <option2>
     And This clerk enters student number <student number>
     Then I verify that this non-existent student is deleted or not
@@ -158,7 +167,8 @@ Feature: Use Case of clerk
 
   @tag13
   Scenario Outline: A clerk deletes a student when the registration period opens
-    Given A clerk logs into the ATC successfully and the registration period opens
+    Given The registration period opens
+    And A clerk logs into the ATC successfully.
     When This clerk enters create student <option>
     And This clerk enters student information, such as <student number>, <name> and <is fulltime(y/n)>
     When This clerk enters delete student <option2>
@@ -173,7 +183,8 @@ Feature: Use Case of clerk
 
   @tag14
   Scenario Outline: A clerk cancels a course when the registration period opens
-    Given A clerk logs into the ATC successfully and the registration period opens
+    Given The registration period opens
+    And A clerk logs into the ATC successfully.
     When This clerk enters create course <option1>
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
     When This clerk enters cancel course <option2>
@@ -188,10 +199,11 @@ Feature: Use Case of clerk
 
   @tag15
   Scenario Outline: A clerk cancels a course when the registration period ends
-    Given A clerk logs into the ATC successfully and the registration period hasn't opened yet
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
     When This clerk enters create course <option1>
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
-    And A clerk logs into the ATC successfully and the registration period ends
+    And The registration period ends
     When This clerk enters cancel course <option2>
     And This clerk enters course code <course code> for cancelling course
     Then I verify that this course is canceled or not
@@ -204,7 +216,8 @@ Feature: Use Case of clerk
       
   @tag16
   Scenario Outline: A clerk cancels a non-existent course when the registration period ends
-    Given A clerk logs into the ATC successfully and the registration period ends
+    Given The registration period ends
+    And A clerk logs into the ATC successfully.
     When This clerk enters cancel course <option2>
     And This clerk enters course code <course code> for cancelling course
     Then I verify that this non-existent course is canceled or not
