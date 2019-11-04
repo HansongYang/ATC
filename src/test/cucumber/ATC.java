@@ -68,26 +68,24 @@ public class ATC {
 		assertThat(state, equalTo(OutputHandler.FINISHWAITING));
 	}
 
-	@Given("^A clerk logs into the ATC successfully and the registration period hasn't opened yet$")
+	@Given("^The registration period hasn't opened yet$")
 	public void a_clerk_logs_into_the_ATC_successfully_and_the_registration_period_hasn_t_opened_yet() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(Config.CLERK_PASSWORD, state);
 		Config.REGISTRATION_ENDS = false;
 		Config.REGISTRATION_STARTS = false;
 	}
 	
-	@Given("^A clerk logs into the ATC successfully and the registration period opens$")
+	@Given("^The registration period opens$")
 	public void a_clerk_logs_into_the_ATC_successfully_and_the_registration_period_opens() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(Config.CLERK_PASSWORD, state);
 		Config.REGISTRATION_STARTS = true;
 		Config.REGISTRATION_ENDS = false;
 	}
 	
-	@Given("^A clerk logs into the ATC successfully and the registration period ends$")
+	@Given("^The registration period ends$")
 	public void a_clerk_logs_into_the_ATC_successfully_and_the_registration_period_ends() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(Config.CLERK_PASSWORD, state);
+		//serverOutput = inputHandler.processInput(Config.CLERK_PASSWORD, state);
 		Config.REGISTRATION_STARTS = false;
 		Config.REGISTRATION_ENDS = true;
 		Config.TERM_ENDS = false;
@@ -276,6 +274,7 @@ public class ATC {
 				state);
 		state = serverOutput.getState();
 		if(u.getStudents().size() > 0 && u.GetStudent(arg1).getStudentName().equals(arg2)){
+			s = new Student(arg1, arg2, true);
 			status = true;
 		}
 	}
@@ -289,6 +288,20 @@ public class ATC {
 			assertEquals(status, false);
 		}
 	}
+	
+	@When("^This student logs out of the ATC$")
+	public void this_student_logs_out_of_the_ATC() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		serverOutput = inputHandler.processInput("log out", InputHandler.WAITING);
+		state = serverOutput.getState();
+	}
+
+	@Then("^I validate whether this student logs out or not$")
+	public void i_validate_whether_this_student_logs_out_or_not() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertThat(state, equalTo(OutputHandler.FINISHWAITING));
+	}
+
 	
 	@When("^This student enters select course \"([^\"]*)\"$")
 	public void this_student_enters_select_course(String option) throws Throwable {
@@ -307,7 +320,7 @@ public class ATC {
 		}
 	}
 
-	@Then("^I validate that this student selects a course successfully$")
+	@Then("^I validate that this student selects a course successfully or not$")
 	public void i_validate_that_this_student_selects_course_successfully() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 	    if(u.getCourses().size() > 0 && Config.REGISTRATION_STARTS && !Config.REGISTRATION_ENDS) {
@@ -334,15 +347,15 @@ public class ATC {
 	@When("^This student enters course code (\\d+) for registering a course$")
 	public void this_student_enters_course_code_for_registering_a_course(int arg1) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-
 	    if(s.getSelectedCourses().size() > 0 && !Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS) {
 	    	status = u.RegisterStudentForCourse(s, u.GetCourse(arg1));
 	    } else {
 	    	status = false;
 	    }
+	    System.out.println(s.getRegisteredCourses().size());
 	}
 	
-	@Then("^I validate that this student registers a course successfully$")
+	@Then("^I validate that this student registers a course successfully or not$")
 	public void i_validate_that_this_student_registers_a_course_successfully() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		if(s.getRegisteredCourses().size() > 0 && !Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS) {
@@ -351,4 +364,48 @@ public class ATC {
 			assertEquals(status, false);
 		}
 	}
+
+	@Then("^I validate that this student registers a non-existent course$")
+	public void i_validate_that_this_student_registers_a_non_existent_course() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertEquals(status, false);
+	}
+	
+	@Then("^I validate that the first student registers a course successfully but not the second student$")
+	public void i_validate_that_the_first_student_registers_a_course_successfully_but_not_the_second_student() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		if(s.getRegisteredCourses().size() == 0 && u.GetCourse(100000).getEnrollStudent().size() > 0) {
+			assertEquals(status, false);
+		} else {
+			assertEquals(status, true);
+		}
+	}
+	
+	@When("^This student enters drop course \"([^\"]*)\"$")
+	public void this_student_enters_drop_course(String option) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+	   serverOutput = inputHandler.processInput(option, state);
+	   state = serverOutput.getState();
+	}
+
+	@When("^This student enters course code (\\d+) for dropping a course$")
+	public void this_student_enters_course_code_for_dropping_a_course(int arg1) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+	    if(!Config.REGISTRATION_STARTS && Config.REGISTRATION_ENDS && !Config.TERM_ENDS && s.getRegisteredCourses().size() > 0) {
+	    	status = u.dropCourse(s, u.GetCourse(arg1));
+	    } else {
+	    	status = false;
+	    }
+	}
+	
+	@Then("^I validate that this student drops a course successfully or not$")
+	public void i_validate_that_this_student_drops_a_course_successfully() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		if(!Config.REGISTRATION_STARTS && Config.REGISTRATION_ENDS && !Config.TERM_ENDS && s.getRegisteredCourses().size() > 0) {
+			assertEquals(status, true);
+		} else {
+			assertEquals(status, false);
+		}
+	}
+	
 }
