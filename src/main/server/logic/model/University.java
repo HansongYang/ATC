@@ -465,7 +465,14 @@ public class University implements UniversityInt {
 				student.DeRegisterCourse(courses.get(i));
 				courses.get(i).RemoveStudent(student);
 			}
-			result = students.remove(student);
+			for(int i = 0; i < students.size(); i++) {
+				if(students.get(i).getStudentName().equals(student.getStudentName()) && students.get(i).getStudentNumber() == student.getStudentNumber()) {
+					students.remove(i);
+					result = true;
+					break;
+				}
+			}
+		
 			logger.info(String.format("University Operation: delete student %d; State: Success", student.StudentNumber()));
 		} else {
 			result = false;
