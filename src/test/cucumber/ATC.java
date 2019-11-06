@@ -91,6 +91,14 @@ public class ATC {
 		Config.TERM_ENDS = false;
 	}
 
+	@Given("^The term ends$")
+	public void the_term_ends() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		Config.REGISTRATION_STARTS = false;
+		Config.REGISTRATION_ENDS = true;
+		Config.TERM_ENDS = true;
+	}
+
 	@When("^This clerk enters create course \"([^\"]*)\"$")
 	public void this_clerk_enters_create_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
@@ -137,7 +145,7 @@ public class ATC {
 	@When("^This clerk enters course code (\\d+) for deleting course$")
 	public void this_clerk_enters_course_code(int code) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		if(u.CheckCourse(code) == false){
+		if(u.CheckCourse(code) == false || Config.REGISTRATION_ENDS || Config.REGISTRATION_STARTS){
 			status = false;
 		} else {
 			status = u.DestroyCourse((Course)u.GetCourse(code));
@@ -202,7 +210,7 @@ public class ATC {
 	@When("^This clerk enters student number (\\d+)$")
 	public void this_clerk_enters_student_number(int code) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		if(u.CheckStudent(code) == false){
+		if(u.CheckStudent(code) == false || Config.REGISTRATION_ENDS || Config.REGISTRATION_STARTS){
 			status = false;
 		} else {
 			status = u.DestroyStudent((Student)u.GetStudent(code));
@@ -236,12 +244,11 @@ public class ATC {
 	@When("^This clerk enters course code (\\d+) for cancelling course$")
 	public void this_clerk_enters_course_code_for_cancelling_course(int code) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		if(u.CheckCourse(code) == false){
+		if(u.CheckCourse(code) == false || !Config.REGISTRATION_ENDS || Config.REGISTRATION_STARTS || Config.TERM_ENDS){
 			status = false;
 		} else {
 			status = u.CancelCourse((Course)u.GetCourse(code));
 		}
-		System.out.println(status);
 	}
 	
 	@Then("^I verify that this course is canceled or not$")
@@ -352,7 +359,6 @@ public class ATC {
 	    } else {
 	    	status = false;
 	    }
-	    System.out.println(s.getRegisteredCourses().size());
 	}
 	
 	@Then("^I validate that this student registers a course successfully or not$")
@@ -391,6 +397,7 @@ public class ATC {
 	@When("^This student enters course code (\\d+) for dropping a course$")
 	public void this_student_enters_course_code_for_dropping_a_course(int arg1) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
+		System.out.println(u.getStudents().size() );
 	    if(!Config.REGISTRATION_STARTS && Config.REGISTRATION_ENDS && !Config.TERM_ENDS && s.getRegisteredCourses().size() > 0) {
 	    	status = u.dropCourse(s, u.GetCourse(arg1));
 	    } else {
@@ -401,11 +408,43 @@ public class ATC {
 	@Then("^I validate that this student drops a course successfully or not$")
 	public void i_validate_that_this_student_drops_a_course_successfully() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		if(!Config.REGISTRATION_STARTS && Config.REGISTRATION_ENDS && !Config.TERM_ENDS && s.getRegisteredCourses().size() > 0) {
+		if(!Config.REGISTRATION_STARTS && Config.REGISTRATION_ENDS && !Config.TERM_ENDS) {
 			assertEquals(status, true);
 		} else {
 			assertEquals(status, false);
 		}
 	}
 	
+	@Then("^I validate that this student is deleted or not$")
+	public void i_validate_that_this_student_is_deleted_or_not() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertEquals(u.getStudents().size(), 0);
+	}
+	
+	@When("^This student enters deregister course \"([^\"]*)\"$")
+	public void this_student_enters_deregister_course(String option) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		serverOutput = inputHandler.processInput(option, state);
+		state = serverOutput.getState();
+	}
+
+	@When("^This student enters course code (\\d+) for deregistering a course$")
+	public void this_student_enters_course_code_for_deregistering_a_course(int arg1) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+	    if(s.getRegisteredCourses().size() > 0 && !Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS) {
+	    	status = u.DeRegisterStudentFromCourse(s, u.GetCourse(arg1));
+	    } else {
+	    	status = false;
+	    }
+	}
+
+	@Then("^I validate that this student deregisters a course or not$")
+	public void i_validate_that_this_student_deregisters_a_course_or_not() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		if(!Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS) {
+			assertEquals(status, true);
+		} else {
+			assertEquals(status, false);
+		}
+	}
 }
