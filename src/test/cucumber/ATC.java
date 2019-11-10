@@ -185,6 +185,7 @@ public class ATC {
 		if(!Config.REGISTRATION_STARTS && !Config.REGISTRATION_ENDS) {
 			status = u.CreateStudent(arg1,  arg2, fullTime);
 			s = new Student(arg1, arg2, fullTime);
+			 University.getInstance().setCurrentstudent(arg1);
 		} else {
 			status = false;
 		}
@@ -282,6 +283,7 @@ public class ATC {
 		state = serverOutput.getState();
 		if(u.getStudents().size() > 0 && u.GetStudent(arg1).getStudentName().equals(arg2)){
 			s = new Student(arg1, arg2, true);
+			University.getInstance().setCurrentstudent(arg1);
 			status = true;
 		}
 	}
@@ -456,6 +458,32 @@ public class ATC {
 	public void i_validate_that_this_student_deregisters_a_course_or_not() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		if(!Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS && !Config.TERM_ENDS) {
+			assertEquals(status, true);
+		} else {
+			assertEquals(status, false);
+		}
+	}
+	
+	@When("^This student enters complete course \"([^\"]*)\"$")
+	public void this_student_enters_complete_course(String option) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		 serverOutput = inputHandler.processInput(option, state);
+		 state = serverOutput.getState();
+	}
+
+	@When("^This student enters course code (\\d+) for completing a course$")
+	public void this_student_enters_course_code_for_completing_a_course(int arg1) throws Throwable {
+	    if(s.getRegisteredCourses().size() > 0 && !Config.TERM_ENDS) {
+	    	status = u.MarkStudents(u.GetCourse(arg1));
+	    } else {
+	    	status = false;
+	    }
+	}
+
+	@Then("^I verify that this student complete this course or not$")
+	public void i_verify_that_this_student_complete_this_course_or_not() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		if(s.getRegisteredCourses().size() > 0 && !Config.TERM_ENDS) {
 			assertEquals(status, true);
 		} else {
 			assertEquals(status, false);
