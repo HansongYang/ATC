@@ -322,7 +322,7 @@ public class ATC {
 	@When("^This student enters course code (\\d+) for selecting a course$")
 	public void this_student_enters_course_code(int arg1) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		if(u.getCourses().size() > 0 && Config.REGISTRATION_STARTS && !Config.REGISTRATION_ENDS && !Config.TERM_ENDS) {
+		if(u.getCourses().size() > 0 && !Config.REGISTRATION_ENDS && !Config.TERM_ENDS) {
 			status = s.SelectCourse(u.GetCourse(arg1));
 		} else {
 			status = false;
@@ -332,7 +332,7 @@ public class ATC {
 	@Then("^I validate that this student selects a course successfully or not$")
 	public void i_validate_that_this_student_selects_course_successfully() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-	    if(u.getCourses().size() > 0 && Config.REGISTRATION_STARTS && !Config.REGISTRATION_ENDS && !Config.TERM_ENDS) {
+	    if(u.getCourses().size() > 0 && !Config.REGISTRATION_ENDS && !Config.TERM_ENDS) {
 	    	assertEquals(status, true);
 	    } else {
 	    	assertEquals(status, false);
@@ -356,9 +356,11 @@ public class ATC {
 	@When("^This student enters course code (\\d+) for registering a course$")
 	public void this_student_enters_course_code_for_registering_a_course(int arg1) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-	    if(s.getSelectedCourses().size() > 0 && !Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS && !Config.TERM_ENDS) {
+	    if(s.getSelectedCourses().size() > 0 && !Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS && !Config.TERM_ENDS && s.isFullTime() && s.getRegisteredCourses().size() <= 4) {
 	    	status = u.RegisterStudentForCourse(s, u.GetCourse(arg1));
-	    } else {
+	    } else if (s.getSelectedCourses().size() > 0 && !Config.REGISTRATION_ENDS && Config.REGISTRATION_STARTS && !Config.TERM_ENDS && !s.isFullTime() && s.getRegisteredCourses().size() <= 2) {
+	    	status = u.RegisterStudentForCourse(s, u.GetCourse(arg1));
+		}else {
 	    	status = false;
 	    }
 	}
@@ -375,6 +377,12 @@ public class ATC {
 
 	@Then("^I validate that this student registers a non-existent course$")
 	public void i_validate_that_this_student_registers_a_non_existent_course() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertEquals(status, false);
+	}
+	
+	@Then("^I validate that this student cannot register this course$")
+	public void i_validate_that_this_student_cannot_register_this_course() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		assertEquals(status, false);
 	}
