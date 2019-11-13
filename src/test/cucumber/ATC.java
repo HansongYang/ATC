@@ -119,7 +119,7 @@ public class ATC {
 		if(arg8.equals("y")) {
 			project = true;
 		}
-		if(!Config.REGISTRATION_ENDS && !Config.REGISTRATION_STARTS) {
+		if(!Config.REGISTRATION_ENDS && !Config.REGISTRATION_STARTS && !u.CheckCourse(arg2)) {
 			status = u.CreateCourse(arg1 , arg2 , arg3, preReq, arg5, arg6, finalExam, project);
 		} else {
 			status = false;
@@ -182,10 +182,10 @@ public class ATC {
 		if(arg3.equals("y")) {
 			fullTime = true;
 		}
-		if(!Config.REGISTRATION_STARTS && !Config.REGISTRATION_ENDS) {
+		if(!Config.REGISTRATION_STARTS && !Config.REGISTRATION_ENDS && !u.CheckStudent(arg1)) {
 			status = u.CreateStudent(arg1,  arg2, fullTime);
 			s = new Student(arg1, arg2, fullTime);
-			 University.getInstance().setCurrentstudent(arg1);
+			University.getInstance().setCurrentstudent(arg1);
 		} else {
 			status = false;
 		}
@@ -387,13 +387,13 @@ public class ATC {
 		assertEquals(status, false);
 	}
 	
-	@Then("^I validate that the first student registers a course successfully but not the second student$")
+	@Then("^I validate that one student registers a course successfully$")
 	public void i_validate_that_the_first_student_registers_a_course_successfully_but_not_the_second_student() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		if(s.getRegisteredCourses().size() == 0 && u.GetCourse(100000).getEnrollStudent().size() > 0) {
-			assertEquals(status, false);
-		} else {
+		if(u.GetCourse(100000).getEnrollStudent().size() > 0) {
 			assertEquals(status, true);
+		} else {
+			assertEquals(status, false);
 		}
 	}
 	

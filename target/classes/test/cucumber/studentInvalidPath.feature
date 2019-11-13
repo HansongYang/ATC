@@ -35,7 +35,7 @@ Feature: Use case of Student with invalid paths
       | "create student" |      101000002 | "Tom Hansen"     | "y"              | "create course" | "Network Computing"    |      100001 |      20 | "n"                  |                  0 |                     0 | "n"              | "y"                    | "select course" |
       | "create student" |      101000003 | "Kerry Smith"    | "n"              | "create course" | "Game Development"     |      100002 |      30 | "n"                  |                  2 |                     4 | "y"              | "n"                    | "select course" |
 
-  @tag4
+  @tag3
   Scenario Outline: A Student selects a course when the term ends
     Given The registration period hasn't opened yet
     And A clerk logs into the ATC successfully.
@@ -57,7 +57,7 @@ Feature: Use case of Student with invalid paths
       | "create student" |      101000002 | "Tom Hansen"     | "y"              | "create course" | "Network Computing"    |      100001 |      20 | "n"                  |                  0 |                     0 | "n"              | "y"                    | "select course" |
       | "create student" |      101000003 | "Kerry Smith"    | "n"              | "create course" | "Game Development"     |      100002 |      30 | "n"                  |                  2 |                     4 | "y"              | "n"                    | "select course" |
 
-  @tag5
+  @tag4
   Scenario Outline: A Student selects a non-existent course when the registraion period opens
     Given The registration period hasn't opened yet
     And A clerk logs into the ATC successfully.
@@ -77,7 +77,7 @@ Feature: Use case of Student with invalid paths
       | "create student" |      101000002 | "Tom Hansen"     | "y"              | "select course" |      100001 |
       | "create student" |      101000003 | "Kerry Smith"    | "n"              | "select course" |      100002 |
 
-  @tag6
+  @tag5
   Scenario Outline: A Student registers a course when the registraion period ends
     Given The registration period hasn't opened yet
     And A clerk logs into the ATC successfully.
@@ -87,6 +87,29 @@ Feature: Use case of Student with invalid paths
     And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
     When This clerk logs out of the ATC
     And The registration period ends
+    When A user connects to the server and then this user enters student
+    And This student enters student number <student number> and name <name>
+    When This student enters select course <option3>
+    And This student enters course code <course code> for selecting a course
+    When This student enters register course <option4>
+    And This student enters course code <course code> for registering a course
+    Then I validate that this student registers a course successfully or not
+
+    Examples: 
+      | option1          | student number | name             | is fulltime(y/n) | option2         | title                  | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
+      | "create student" |      101000001 | "John Masefield" | "y"              | "create course" | "Software Engineering" |      100000 |      10 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" |
+      | "create student" |      101000002 | "Tom Hansen"     | "y"              | "create course" | "Network Computing"    |      100001 |      20 | "n"                  |                  0 |                     0 | "n"              | "y"                    | "select course" | "register for course" |
+      | "create student" |      101000003 | "Kerry Smith"    | "n"              | "create course" | "Game Development"     |      100002 |      30 | "n"                  |                  2 |                     4 | "y"              | "n"                    | "select course" | "register for course" |
+
+	@tag6
+  Scenario Outline: A Student registers a course when the registraion period hasn't opened yet
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
+    When This clerk enters create student <option1>
+    And This clerk enters student information, such as <student number>, <name> and <is fulltime(y/n)>
+    When This clerk enters create course <option2>
+    And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
+    When This clerk logs out of the ATC
     When A user connects to the server and then this user enters student
     And This student enters student number <student number> and name <name>
     When This student enters select course <option3>
@@ -174,7 +197,7 @@ Feature: Use case of Student with invalid paths
       | "create student" |      101000002 | "Tom Hansen"     | "y"              | "create course" | "Network Computing"    |      100000 |      20 | "n"                  |                  0 |                     0 | "n"              | "y"                    | "select course" | "register for course" | "Physics"   |       100001 | "Arts"      |       100002 | "Geomatics" |       100003 | "Chemistry" |       100004 |
       | "create student" |      101000003 | "Kerry Smith"    | "n"              | "create course" | "Game Development"     |      100000 |      30 | "n"                  |                  2 |                     4 | "y"              | "n"                    | "select course" | "register for course" | "Chemistry" |       100001 | "Fictions"  |       100002 | "AI"        |       100003 | "Time"      |       100004 |
 
-@tag9
+	@tag9
   Scenario Outline: A part time Student registers a course when his number of courses reach to the limit
     Given The registration period hasn't opened yet
     And A clerk logs into the ATC successfully.
