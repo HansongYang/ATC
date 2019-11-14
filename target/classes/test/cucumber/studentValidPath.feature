@@ -35,7 +35,7 @@ Feature: Use case of Student with valid paths
       | "create student" |      101000001 | "John Masefield" | "y"              |
       | "create student" |      101000002 | "Tom Hansen"     | "y"              |
       | "create student" |      101000003 | "Kerry Smith"    | "n"              |
-      
+
   @tag3
   Scenario Outline: A Student selects a course when the registraion period hasn't opened yet
     Given The registration period hasn't opened yet
@@ -56,7 +56,7 @@ Feature: Use case of Student with valid paths
       | "create student" |      101000001 | "John Masefield" | "y"              | "create course" | "Software Engineering" |      100000 |      10 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" |
       | "create student" |      101000002 | "Tom Hansen"     | "y"              | "create course" | "Network Computing"    |      100001 |      20 | "n"                  |                  0 |                     0 | "n"              | "y"                    | "select course" |
       | "create student" |      101000003 | "Kerry Smith"    | "n"              | "create course" | "Game Development"     |      100002 |      30 | "n"                  |                  2 |                     4 | "y"              | "n"                    | "select course" |
-  
+
   @tag4
   Scenario Outline: A Student selects a course when the registraion period opens
     Given The registration period hasn't opened yet
@@ -233,3 +233,35 @@ Feature: Use case of Student with valid paths
       | "create student" |      101000001 | "John Masefield" | "y"              | "create course" | "Software Engineering" |      100000 |      10 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" | "complete course" |
       | "create student" |      101000002 | "Tom Hansen"     | "y"              | "create course" | "Network Computing"    |      100001 |      20 | "n"                  |                  0 |                     0 | "n"              | "y"                    | "select course" | "register for course" | "complete course" |
       | "create student" |      101000003 | "Kerry Smith"    | "y"              | "create course" | "Game Development"     |      100002 |      30 | "n"                  |                  2 |                     4 | "y"              | "n"                    | "select course" | "register for course" | "complete course" |
+
+  @tag11
+  Scenario Outline: A student registers a course for the last place and deregisters this course, anthoer student tries to register this course
+    Given The registration period hasn't opened yet
+    And A clerk logs into the ATC successfully.
+    When This clerk enters create student <option1>
+    And This clerk enters student information, such as <student number1>, <name1> and <is fulltime(y/n)>
+    When This clerk enters create student <option1>
+    And This clerk enters student information, such as <student number2>, <name2> and <is fulltime(y/n)>
+    When This clerk enters create course <option2>
+    And This clerk enters course information, such as <title>, <course code>, <capsize>, <enforce prereqs(y/n)>, <number of midterms>, <number of assignments>, <has a final(y/n)> and <is project course(y/n)>
+    When This clerk logs out of the ATC
+    And The registration period opens
+    When A user connects to the server and then this user enters student
+    And This student enters student number <student number1> and name <name1>
+    When A user connects to the server and then this user enters student
+    When This student enters select course <option3>
+    And This student enters course code <course code> for selecting a course
+    When This student enters register course <option4>
+    And This student enters course code <course code> for registering a course
+    When This student enters deregister course <option5>
+    And This student enters course code <course code> for deregistering a course
+    And This student enters student number <student number2> and name <name2>
+    When This student enters select course <option3>
+    And This student enters course code <course code> for selecting a course
+    When This student enters register course <option4>
+    And This student enters course code <course code> for registering a course
+    Then I validate that second student registers this course successfully
+
+    Examples: 
+      | option1          | student number1 | name1            | student number2 | name2          | is fulltime(y/n) | option2         | title                  | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               | option5             |
+      | "create student" |       101000001 | "John Masefield" |       101000002 | "Joe Thompson" | "y"              | "create course" | "Software Engineering" |      100000 |       1 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" | "deregister course" |
