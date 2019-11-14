@@ -565,6 +565,9 @@ public class OutputHandler {
 		} else if (!Config.REGISTRATION_STARTS) {
 			output.setOutput("Registration has not started!");
 			output.setState(STUDENT);
+		} else if (!Config.REGISTRATION_ENDS) {
+			output.setOutput("Course cannot be completed during registration period.");
+			output.setState(STUDENT);
 		} else {
 			if (input.replace(" ", "").equalsIgnoreCase("") || !isNum.matches()) {
 				output.setOutput("Your input should be in correct format.");

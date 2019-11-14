@@ -497,4 +497,14 @@ public class ATC {
 			assertEquals(status, false);
 		}
 	}
+	
+	@Then("^I validate that second student registers this course successfully$")
+	public void i_validate_that_second_student_registers_this_course_successfully() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+	    if(s.getRegisteredCourses().size() > 0 && u.GetCourse(100000).getEnrollStudent().size() > 0) {
+	    	assertEquals(status, true);
+	    } else {
+	    	assertEquals(status, false);
+	    }
+	}
 }
