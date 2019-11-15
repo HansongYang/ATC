@@ -186,7 +186,6 @@ public class ATC {
 		} else {
 			status = false;
 		}
-		System.out.println(status);
 	}
 	
 	@Then("^I verify that this student is created or not$")
