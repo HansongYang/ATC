@@ -71,32 +71,29 @@ public class ATC {
 	@Given("^The registration period hasn't opened yet$")
 	public void a_clerk_logs_into_the_ATC_successfully_and_the_registration_period_hasn_t_opened_yet() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
+		Thread.sleep(Config.SIMULATED_DAY * 2);
 		Config.REGISTRATION_ENDS = false;
 		Config.REGISTRATION_STARTS = false;
+		Config.TERM_ENDS = false;
 	}
 	
 	@Given("^The registration period opens$")
 	public void a_clerk_logs_into_the_ATC_successfully_and_the_registration_period_opens() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		Config.REGISTRATION_STARTS = true;
-		Config.REGISTRATION_ENDS = false;
+		Thread.sleep(Config.SIMULATED_DAY * 20);
 	}
 	
 	@Given("^The registration period ends$")
 	public void a_clerk_logs_into_the_ATC_successfully_and_the_registration_period_ends() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		//serverOutput = inputHandler.processInput(Config.CLERK_PASSWORD, state);
-		Config.REGISTRATION_STARTS = false;
-		Config.REGISTRATION_ENDS = true;
-		Config.TERM_ENDS = false;
+		Thread.sleep(Config.SIMULATED_DAY * 34);
 	}
 
 	@Given("^The term ends$")
 	public void the_term_ends() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		Config.REGISTRATION_STARTS = false;
-		Config.REGISTRATION_ENDS = true;
-		Config.TERM_ENDS = true;
+		Thread.sleep(Config.SIMULATED_DAY * 118);
 	}
 
 	@When("^This clerk enters create course \"([^\"]*)\"$")
@@ -182,13 +179,14 @@ public class ATC {
 		if(arg3.equals("y")) {
 			fullTime = true;
 		}
-		if(!Config.REGISTRATION_STARTS && !Config.REGISTRATION_ENDS && !u.CheckStudent(arg1)) {
+		if(!Config.REGISTRATION_STARTS && !u.CheckStudent(arg1)) {
 			status = u.CreateStudent(arg1,  arg2, fullTime);
 			s = new Student(arg1, arg2, fullTime);
-			University.getInstance().setCurrentstudent(arg1);
+			u.setCurrentstudent(arg1);
 		} else {
 			status = false;
 		}
+		System.out.println(status);
 	}
 	
 	@Then("^I verify that this student is created or not$")
@@ -283,7 +281,7 @@ public class ATC {
 		state = serverOutput.getState();
 		if(u.getStudents().size() > 0 && u.GetStudent(arg1).getStudentName().equals(arg2)){
 			s = new Student(arg1, arg2, true);
-			University.getInstance().setCurrentstudent(arg1);
+			u.setCurrentstudent(arg1);
 			status = true;
 		}
 	}
@@ -409,7 +407,7 @@ public class ATC {
 	public void this_student_enters_course_code_for_dropping_a_course(int arg1) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		courses = s.getRegisteredCourses().size();
-	    if(!Config.REGISTRATION_STARTS && Config.REGISTRATION_ENDS && !Config.TERM_ENDS && s.getRegisteredCourses().size() > 0) {
+	    if(Config.REGISTRATION_ENDS && !Config.TERM_ENDS && s.getRegisteredCourses().size() > 0) {
 	    	status = u.dropCourse(s, u.GetCourse(arg1));
 	    } else {
 	    	status = false;
@@ -429,7 +427,11 @@ public class ATC {
 	@Then("^I validate that this student is deleted or not$")
 	public void i_validate_that_this_student_is_deleted_or_not() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertEquals(u.getStudents().size(), 0);
+		if(status) {
+			assertEquals(u.getStudents().size(), 0);
+		} else {
+			assertEquals(u.getStudents().size(), 1);
+		}
 	}
 	
 
