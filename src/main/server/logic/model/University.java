@@ -23,7 +23,7 @@ public class University implements UniversityInt {
 	List<Course> courses = new ArrayList<Course>();
 	List<Student> students = new ArrayList<Student>();
 	
-	static int currentstudent;
+	//static int currentstudent;
 	
 	static Timer timer_registrationstarts;
 	static Timer timer_registrationends;
@@ -81,7 +81,7 @@ public class University implements UniversityInt {
 				Config.REGISTRATION_ENDS = true;
 				//System.out.println("registration ends");
 			}
-		}, Config.SIMULATED_DAY * (20 + 14));
+		}, Config.SIMULATED_DAY * (70 + 14));
 		
 		timer_termends.schedule(new TimerTask() {
 			
@@ -152,14 +152,14 @@ public class University implements UniversityInt {
 		this.students = students;
 	}
 
-	public int getCurrentstudent() {
+/*	public int getCurrentstudent() {
 		return currentstudent;
 	}
 
 	public void setCurrentstudent(int currentstudent) {
 		University.currentstudent = currentstudent;
 	}
-
+*/
 	@Override
 	public List<Course> Courses() {
 		// TODO Auto-generated method stub

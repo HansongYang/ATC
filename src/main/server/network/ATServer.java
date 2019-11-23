@@ -24,7 +24,7 @@ public class ATServer implements Runnable {
 	private HashMap<Integer, ServerThread> clients;
 	private Logger logger = Trace.getInstance().getLogger(this);
 	InputHandler handler=new InputHandler();
-	private List<Client> clientList=new ArrayList<Client>();
+	private static List<Client> clientList=new ArrayList<Client>();
 	
 	public ATServer(int port) {
 		
@@ -100,7 +100,7 @@ public class ATServer implements Runnable {
 			String output;
 			if(exist(from)){
 				int state=clientState(from);
-				so=handler.processInput(input,state);
+				so=handler.processInput(input, state, from);
 				output=so.getOutput()+"\n";
 				from.send(output);
 				clientSetState(from,so.getState());
@@ -108,7 +108,7 @@ public class ATServer implements Runnable {
 			}else{
 				Client client=new Client(from,InputHandler.WAITING);
 				clientList.add(client);
-				so=handler.processInput(input,InputHandler.WAITING);
+				so=handler.processInput(input,InputHandler.WAITING, from);
 				output=so.getOutput()+"\n";
 				from.send(output);
 				clientSetState(from,so.getState());
@@ -158,5 +158,22 @@ public class ATServer implements Runnable {
 			toTerminate = null;
 		}
 	}
-
+	
+	public static void setStudentNumber(int id, int sn) {
+		clientList.get(id).setStudentNumber(sn);
+	}
+	
+	public static int getStudentNumber(ServerThread from) {
+		int id = 0;
+		for(int i=0;i<clientList.size();i++){
+			if(clientList.get(i).getClient().equals(from)){
+				id = i;
+			}
+		}
+		return clientList.get(id).getStudentNumber();
+	}
+	
+	public static int getListSize() {
+		return clientList.size();
+	}
 }

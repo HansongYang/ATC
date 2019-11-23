@@ -55,5 +55,4 @@ public class ClientThread extends Thread {
 				ioe.printStackTrace();
 	    }}
 	}
-
 }
