@@ -4,9 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import main.server.logic.handler.model.Output;
+import main.server.network.ATServer;
+import main.server.network.ServerThread;
 import main.server.logic.model.Course;
 import main.server.logic.model.Student;
 import main.server.logic.model.University;
+
 import main.utilities.Config;
 
 public class OutputHandler {
@@ -64,9 +67,10 @@ public class OutputHandler {
 				result = University.getInstance().LookupStudent(
 						Integer.parseInt(number), name);
 				if (result) {
+					if(ATServer.getListSize() > 0) {
+						ATServer.setStudentNumber(ATServer.getListSize()-1, Integer.parseInt(strArray[0]));
+					}
 					output.setOutput("What can I do for you? Menu: Select Course, Register for Course, Drop Course, Deregister Course, Complete Course.");
-					University.getInstance().setCurrentstudent(
-							Integer.parseInt(number));
 					output.setState(STUDENT);
 				} else {
 					output.setOutput("Invalid student number or student name.");
@@ -354,7 +358,7 @@ public class OutputHandler {
 		return output;
 	}
 
-	public Output selectCourse(String input) {
+	public Output selectCourse(String input, ServerThread from) {
 		Output output = new Output("", 0);
 		String code = input.trim();
 		Pattern pattern = Pattern.compile("[0-9]*");
@@ -382,7 +386,7 @@ public class OutputHandler {
 			output.setOutput("The course does not exist!");
 			output.setState(SELECTCOURSE);
 		} else {
-			int studentnumber = University.getInstance().getCurrentstudent();
+			int studentnumber = ATServer.getStudentNumber(from);
 			Student student = (Student) University.getInstance().GetStudent(
 					studentnumber);
 			result = student.SelectCourse(University.getInstance().GetCourse(
@@ -397,7 +401,7 @@ public class OutputHandler {
 		return output;
 	}
 
-	public Output registerforCourse(String input) {
+	public Output registerforCourse(String input, ServerThread from) {
 		Output output = new Output("", 0);
 		String code = input.trim();
 		Pattern pattern = Pattern.compile("[0-9]*");
@@ -430,8 +434,7 @@ public class OutputHandler {
 				output.setOutput("The course does not exist!");
 				output.setState(REGISTERFORCOURSE);
 			} else {
-				int studentnumber = University.getInstance()
-						.getCurrentstudent();
+				int studentnumber = ATServer.getStudentNumber(from);
 				Student student = University.getInstance().GetStudent(
 						studentnumber);
 				Course course = University.getInstance().GetCourse(
@@ -449,7 +452,7 @@ public class OutputHandler {
 		return output;
 	}
 
-	public Output dropCourse(String input) {
+	public Output dropCourse(String input, ServerThread from) {
 		Output output = new Output("", 0);
 		String code = input.trim();
 		Pattern pattern = Pattern.compile("[0-9]*");
@@ -480,7 +483,7 @@ public class OutputHandler {
 			output.setOutput("The course does not exist!");
 			output.setState(DROPCOURSE);
 		} else {
-			int studentnumber = University.getInstance().getCurrentstudent();
+			int studentnumber = ATServer.getStudentNumber(from);
 			Student student = (Student) University.getInstance().GetStudent(
 					studentnumber);
 			Course course = University.getInstance().GetCourse(
@@ -501,7 +504,7 @@ public class OutputHandler {
 		return output;
 	}
 
-	public Output deregisterCourse(String input) {
+	public Output deregisterCourse(String input, ServerThread from) {
 		Output output = new Output("", 0);
 		String code = input.trim();
 		Pattern pattern = Pattern.compile("[0-9]*");
@@ -533,8 +536,7 @@ public class OutputHandler {
 				output.setOutput("The course does not exist!");
 				output.setState(DEREGISTERCOURSE);
 			} else {
-				int studentnumber = University.getInstance()
-						.getCurrentstudent();
+				int studentnumber = ATServer.getStudentNumber(from);
 				Student student = University.getInstance().GetStudent(
 						studentnumber);
 				Course course = University.getInstance().GetCourse(
@@ -552,7 +554,7 @@ public class OutputHandler {
 		return output;
 	}
 	
-	public Output completeCourse(String input) { //Course completion
+	public Output completeCourse(String input, ServerThread from) { //Course completion
 		Output output = new Output("", 0);
 		String code = input.trim();
 		Pattern pattern = Pattern.compile("[0-9]*");
@@ -581,8 +583,7 @@ public class OutputHandler {
 				output.setOutput("The course does not exist!");
 				output.setState(COMPLETECOURSE);
 			} else {
-				int studentnumber = University.getInstance()
-						.getCurrentstudent();
+				int studentnumber = ATServer.getStudentNumber(from);
 				Student student = University.getInstance().GetStudent(
 						studentnumber);
 				Course course = University.getInstance().GetCourse(

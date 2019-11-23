@@ -13,10 +13,12 @@ import main.server.logic.model.Course;
 import main.server.logic.model.Student;
 import main.server.logic.model.University;
 import main.utilities.Config;
+import main.server.network.ServerThread;
 
 public class ATC {
 	InputHandler inputHandler = new InputHandler();
 	ServerOutput serverOutput = new ServerOutput("", 0);
+	ServerThread from;
 	University u = new University();
 	Student s;
 	boolean status = false;
@@ -26,21 +28,21 @@ public class ATC {
 	@Given("^The server is running and the comming term is initialized$")
 	public void the_server_is_running_and_the_comming_term_is_initialized() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput("", InputHandler.WAITING);
+		serverOutput = inputHandler.processInput("", InputHandler.WAITING, from);
 		state = serverOutput.getState();
 	}
 
 	@When("^A user connects to the server and then this user enters clerk$")
 	public void a_user_connects_to_the_server_and_then_this_user_enters_clerk() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput("clerk", state);
+		serverOutput = inputHandler.processInput("clerk", state, from);
 		state = serverOutput.getState();
 	}
 
 	@Then("^I validate the password \"([^\"]*)\" which this clerk enters$")
 	public void i_validate_the_password_which_this_clerk_enters(String password) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(password, state);
+		serverOutput = inputHandler.processInput(password, state, from);
 		state = serverOutput.getState();
 		if(password.equals(Config.CLERK_PASSWORD)) {
 			assertThat(state, equalTo(OutputHandler.CLERK));
@@ -52,13 +54,13 @@ public class ATC {
 	@Given("^A clerk logs into the ATC successfully\\.$")
 	public void a_clerk_logs_into_the_ATC_successfully() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		inputHandler.processInput(Config.CLERK_PASSWORD, state);
+		inputHandler.processInput(Config.CLERK_PASSWORD, state, from);
 	}
 
 	@When("^This clerk logs out of the ATC$")
 	public void this_clerk_enters_option_for_logging_out() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput("log out", InputHandler.WAITING);
+		serverOutput = inputHandler.processInput("log out", InputHandler.WAITING, from);
 		state = serverOutput.getState();
 	}
 
@@ -99,7 +101,7 @@ public class ATC {
 	@When("^This clerk enters create course \"([^\"]*)\"$")
 	public void this_clerk_enters_create_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 
@@ -135,7 +137,7 @@ public class ATC {
 	@When("^This clerk enters delete course \"([^\"]*)\"$")
 	public void this_clerk_enters_delete_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 	
@@ -168,7 +170,7 @@ public class ATC {
 	@When("^This clerk enters create student \"([^\"]*)\"$")
 	public void this_clerk_enters_create_student(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 	
@@ -182,7 +184,6 @@ public class ATC {
 		if(!Config.REGISTRATION_STARTS && !u.CheckStudent(arg1)) {
 			status = u.CreateStudent(arg1,  arg2, fullTime);
 			s = new Student(arg1, arg2, fullTime);
-			u.setCurrentstudent(arg1);
 		} else {
 			status = false;
 		}
@@ -201,7 +202,7 @@ public class ATC {
 	@When("^This clerk enters delete student \"([^\"]*)\"$")
 	public void this_clerk_enters_delete_student(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 
@@ -235,7 +236,7 @@ public class ATC {
 	@When("^This clerk enters cancel course \"([^\"]*)\"$")
 	public void this_clerk_enters_cancel_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 	
@@ -268,19 +269,17 @@ public class ATC {
 	@When("^A user connects to the server and then this user enters student$")
 	public void a_user_connects_to_the_server_and_then_this_user_enters_student() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput("student", state);
+		serverOutput = inputHandler.processInput("student", state, from);
 		state = serverOutput.getState();
 	}
 
 	@When("^This student enters student number (\\d+) and name \"([^\"]*)\"$")
 	public void this_student_enters_student_number_and_name(int arg1, String arg2) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(arg1 + "," + arg2,
-				state);
+		serverOutput = inputHandler.processInput(arg1 + "," + arg2, state, from);
 		state = serverOutput.getState();
 		if(u.getStudents().size() > 0 && u.GetStudent(arg1).getStudentName().equals(arg2)){
 			s = new Student(arg1, arg2, true);
-			u.setCurrentstudent(arg1);
 			status = true;
 		}
 	}
@@ -298,7 +297,7 @@ public class ATC {
 	@When("^This student logs out of the ATC$")
 	public void this_student_logs_out_of_the_ATC() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput("log out", InputHandler.WAITING);
+		serverOutput = inputHandler.processInput("log out", InputHandler.WAITING, from);
 		state = serverOutput.getState();
 	}
 
@@ -312,7 +311,7 @@ public class ATC {
 	@When("^This student enters select course \"([^\"]*)\"$")
 	public void this_student_enters_select_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 
@@ -346,7 +345,7 @@ public class ATC {
 	@When("^This student enters register course \"([^\"]*)\"$")
 	public void this_student_enters_register_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 
@@ -397,7 +396,7 @@ public class ATC {
 	@When("^This student enters drop course \"([^\"]*)\"$")
 	public void this_student_enters_drop_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-	   serverOutput = inputHandler.processInput(option, state);
+	   serverOutput = inputHandler.processInput(option, state, from);
 	   state = serverOutput.getState();
 	}
 	
@@ -449,7 +448,7 @@ public class ATC {
 	@When("^This student enters deregister course \"([^\"]*)\"$")
 	public void this_student_enters_deregister_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		serverOutput = inputHandler.processInput(option, state);
+		serverOutput = inputHandler.processInput(option, state, from);
 		state = serverOutput.getState();
 	}
 
@@ -476,7 +475,7 @@ public class ATC {
 	@When("^This student enters complete course \"([^\"]*)\"$")
 	public void this_student_enters_complete_course(String option) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		 serverOutput = inputHandler.processInput(option, state);
+		 serverOutput = inputHandler.processInput(option, state, from);
 		 state = serverOutput.getState();
 	}
 

@@ -6,6 +6,7 @@ public class Client {
 	
 	ServerThread client;
 	int state;
+	int studentNumber = 0;
 	
 	public Client(ServerThread client,int state){
 		this.client=client;
@@ -26,6 +27,14 @@ public class Client {
 	
 	public void setState(int state) {
 		this.state = state;
+	}
+
+	public void setStudentNumber(int sn) {
+		studentNumber = sn;	
+	}
+	
+	public int getStudentNumber() {
+		return studentNumber;
 	}
 
 }
