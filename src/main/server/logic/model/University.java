@@ -81,7 +81,7 @@ public class University implements UniversityInt {
 				Config.REGISTRATION_ENDS = true;
 				//System.out.println("registration ends");
 			}
-		}, Config.SIMULATED_DAY * (70 + 14));
+		}, Config.SIMULATED_DAY * (20 + 14));
 		
 		timer_termends.schedule(new TimerTask() {
 			
