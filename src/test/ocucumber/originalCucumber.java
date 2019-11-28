@@ -1,12 +1,16 @@
 package test.ocucumber;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import main.server.logic.handler.InputHandler;
+import main.server.logic.handler.model.Client;
 import main.server.logic.handler.model.ServerOutput;
 import main.server.logic.model.Student;
 import main.server.logic.model.University;
@@ -16,7 +20,9 @@ import main.utilities.Config;
 public class originalCucumber {
 	InputHandler inputHandler = new InputHandler();
 	ServerOutput serverOutput = new ServerOutput("", 0);
+	List<Client> clientList = new ArrayList<Client>();
 	ServerThread from;
+	int index = 0;
 	University u = new University();
 	Student s1, s2, s3, s4;
 	boolean status = false;
@@ -24,7 +30,6 @@ public class originalCucumber {
 	
 	@Given("^Clerk logs into the ATC successfully\\.$")
 	public void a_clerk_logs_into_the_ATC_successfully() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
 		inputHandler.processInput(Config.CLERK_PASSWORD, state, from);
 	}
 	
@@ -85,14 +90,16 @@ public class originalCucumber {
 	
 	@When("^Student S(\\d+) tries to log in$")
 	public void student_S_tries_to_log_in(int arg1) throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
 		serverOutput = inputHandler.processInput("student", state, from);
 		state = serverOutput.getState();
 	}
 
 	@When("^Student enters student number (\\d+) and name \"([^\"]*)\"$")
 	public void student_enters_student_number_and_name(int arg1, String arg2) throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
+		Client client = new Client(from,InputHandler.WAITING);
+		client.setStudentNumber(arg1);
+		clientList.add(index,client);
+		index++;
 		serverOutput = inputHandler.processInput(arg1 + "," + arg2, state, from);
 		state = serverOutput.getState();
 		if(u.getStudents().size() > 0 && u.GetStudent(arg1).getStudentName().equals(arg2)){
@@ -106,6 +113,8 @@ public class originalCucumber {
 				s4 = new Student(arg1, arg2, true);
 			}
 			status = true;
+		} else {
+			assertTrue("Student " + arg2 + " doesn't exist.", false);
 		}
 	}
 
@@ -113,12 +122,16 @@ public class originalCucumber {
 	public void student_S_enters_select_course_option_and(int arg1, String arg2, int arg3) throws Throwable {
 	    if(u.getCourses().size() > 0) {
 			if(arg1 == 1) {
+				assertEquals(clientList.get(0).getStudentNumber(), s1.getStudentNumber());
 		    	status = s1.SelectCourse(u.GetCourse(arg3));
 		    } else if (arg1 == 2) {
+		    	assertEquals(clientList.get(1).getStudentNumber(), s2.getStudentNumber());
 		    	status = s2.SelectCourse(u.GetCourse(arg3));
 		    } else if (arg1 == 3) {
+		    	assertEquals(clientList.get(2).getStudentNumber(), s3.getStudentNumber());
 		    	status = s3.SelectCourse(u.GetCourse(arg3));
 		    } else if (arg1 == 4) {
+		    	assertEquals(clientList.get(3).getStudentNumber(), s4.getStudentNumber());
 		    	status = s4.SelectCourse(u.GetCourse(arg3));
 		    }
 	    } else {
@@ -129,24 +142,28 @@ public class originalCucumber {
 	@When("^Student S(\\d+) enters register course \"([^\"]*)\" option and (\\d+)$")
 	public void student_S_enters_register_course_option_and(int arg1, String arg2, int arg3) throws Throwable {
 	   if(arg1 == 1) {
+		   assertEquals(clientList.get(0).getStudentNumber(), s1.getStudentNumber());
 		   if(s1.getSelectedCourses().size() > 0) {
 			   status = u.RegisterStudentForCourse(s1, u.GetCourse(arg3));
 		   } else {
 			   status = false; 
 		   }
 	   } else if(arg1 == 2) {
+		   assertEquals(clientList.get(1).getStudentNumber(), s2.getStudentNumber());
 		   if(s2.getSelectedCourses().size() > 0) {
 			   status = u.RegisterStudentForCourse(s2, u.GetCourse(arg3));
 		   } else {
 			   status = false;
 		   }
 	   } else if(arg1 == 3) {
+		   assertEquals(clientList.get(2).getStudentNumber(), s3.getStudentNumber());
 		   if(s3.getSelectedCourses().size() > 0) {
 			   status = u.RegisterStudentForCourse(s3, u.GetCourse(arg3));
 		   } else {
 			   status = false;
 		   }
 	   } else if(arg1 == 4) {
+		   assertEquals(clientList.get(3).getStudentNumber(), s4.getStudentNumber());
 		   if(s4.getSelectedCourses().size() > 0) {
 			   status = u.RegisterStudentForCourse(s4, u.GetCourse(arg3));
 		   } else {
@@ -172,24 +189,28 @@ public class originalCucumber {
 	@When("^Student S(\\d+) deregisters from this course (\\d+) simultaneously$")
 	public void student_S_deregisters_from_this_course_simultaneously(int arg1, int arg2) throws Throwable {
 	    if(arg1 == 1) {
+	    	assertEquals(clientList.get(0).getStudentNumber(), s1.getStudentNumber());
 	    	if(s1.getRegisteredCourses().size() > 0) {
 	    		status = u.DeRegisterStudentFromCourse(s1, u.GetCourse(arg2));
 	    	} else {
 	    		status = false;
 	    	}
 	    } else if(arg1 == 2) {
+	    	assertEquals(clientList.get(1).getStudentNumber(), s2.getStudentNumber());
 	    	if(s2.getRegisteredCourses().size() > 0) {
 	    		status = u.DeRegisterStudentFromCourse(s2, u.GetCourse(arg2));
 	    	} else {
 	    		status = false;
 	    	}
 	    } else if(arg1 == 3) {
+	    	assertEquals(clientList.get(2).getStudentNumber(), s3.getStudentNumber());
 	    	if(s3.getRegisteredCourses().size() > 0) {
 	    		status = u.DeRegisterStudentFromCourse(s3, u.GetCourse(arg2));
 	    	} else {
 	    		status = false;
 	    	}
 	    } else if(arg1 == 4) {
+	    	assertEquals(clientList.get(3).getStudentNumber(), s4.getStudentNumber());
 	    	if(s4.getRegisteredCourses().size() > 0) {
 	    		status = u.DeRegisterStudentFromCourse(s4, u.GetCourse(arg2));
 	    	} else {
