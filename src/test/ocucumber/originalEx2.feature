@@ -32,7 +32,7 @@ Feature: Example 2 with Original cucumber.
     When Student S3 enters register course <option4> option and <course code>
     And Student S4 enters register course <option4> option and <course code>
     And Student S2 deregisters from this course <course code> simultaneously
-    Then I validate that the one of the two students gets in this course
+    Then I validate that the one of the last two students gets in this course
 
     Examples: 
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
@@ -70,7 +70,7 @@ Feature: Example 2 with Original cucumber.
     When Student S4 enters register course <option4> option and <course code>
     And Student S3 enters register course <option4> option and <course code>
     And Student S2 deregisters from this course <course code> simultaneously
-    Then I validate that the one of the two students gets in this course
+    Then I validate that the one of the last two students gets in this course
 
     Examples: 
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
@@ -108,7 +108,7 @@ Feature: Example 2 with Original cucumber.
     And Student S2 deregisters from this course <course code> simultaneously
     When Student S4 enters register course <option4> option and <course code>
     And Student S3 enters register course <option4> option and <course code>
-    Then I validate that both of two students gets in this course
+    Then I validate that both of the last two students gets in this course
 
     Examples: 
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
@@ -146,7 +146,7 @@ Feature: Example 2 with Original cucumber.
     And Student S2 deregisters from this course <course code> simultaneously
     When Student S3 enters register course <option4> option and <course code>
     And Student S4 enters register course <option4> option and <course code>
-    Then I validate that both of two students gets in this course
+    Then I validate that both of the last two students gets in this course
 
     Examples: 
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
@@ -184,7 +184,7 @@ Feature: Example 2 with Original cucumber.
     And Student S4 enters register course <option4> option and <course code>
     When Student S2 deregisters from this course <course code> simultaneously
     And Student S3 enters register course <option4> option and <course code>
-    Then I validate that both of two students gets in this course
+    Then I validate that both of the last two students gets in this course
 
     Examples: 
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
@@ -222,7 +222,7 @@ Feature: Example 2 with Original cucumber.
     When Student S3 enters register course <option4> option and <course code>
     And Student S2 deregisters from this course <course code> simultaneously
     And Student S4 enters register course <option4> option and <course code>
-    Then I validate that both of two students gets in this course
+    Then I validate that both of the last two students gets in this course
 
     Examples: 
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |

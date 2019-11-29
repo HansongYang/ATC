@@ -1,6 +1,6 @@
 Feature: Example 1 with original cucumber.
 
-  Scenario Outline: S2 gets in C1
+  Scenario Outline: Ex1
     Given The registration period hasn't opened yet
     And Clerk logs into the ATC successfully.
     When Clerk enters create student <option1>
@@ -37,7 +37,7 @@ Feature: Example 1 with original cucumber.
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
       | "create student" |      101000001 | "S1" |       101000002 | "S2"  |       101000003 | "S3"  |       101000004 | "S4"  | "y"              | "create course" | "C1"  |      100000 |       2 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" |
   
-    Scenario Outline: S2 gets in C1
+    Scenario Outline: Ex1
     Given The registration period hasn't opened yet
     And Clerk logs into the ATC successfully.
     When Clerk enters create student <option1>
@@ -74,7 +74,7 @@ Feature: Example 1 with original cucumber.
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
       | "create student" |      101000001 | "S1" |       101000002 | "S2"  |       101000003 | "S3"  |       101000004 | "S4"  | "y"              | "create course" | "C1"  |      100000 |       2 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" |
   
-  Scenario Outline: S3 gets in C1
+  Scenario Outline: Ex1
     Given The registration period hasn't opened yet
     And Clerk logs into the ATC successfully.
     When Clerk enters create student <option1>
@@ -111,7 +111,7 @@ Feature: Example 1 with original cucumber.
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
       | "create student" |      101000001 | "S1" |       101000002 | "S2"  |       101000003 | "S3"  |       101000004 | "S4"  | "y"              | "create course" | "C1"  |      100000 |       2 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" |
   
-    Scenario Outline: S3 gets in C1
+    Scenario Outline: Ex1
     Given The registration period hasn't opened yet
     And Clerk logs into the ATC successfully.
     When Clerk enters create student <option1>
@@ -148,7 +148,7 @@ Feature: Example 1 with original cucumber.
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
       | "create student" |      101000001 | "S1" |       101000002 | "S2"  |       101000003 | "S3"  |       101000004 | "S4"  | "y"              | "create course" | "C1"  |      100000 |       2 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" |
      
-  Scenario Outline: S4 gets in C1
+  Scenario Outline: Ex1
     Given The registration period hasn't opened yet
     And Clerk logs into the ATC successfully.
     When Clerk enters create student <option1>
@@ -185,7 +185,7 @@ Feature: Example 1 with original cucumber.
       | option1          | student number | name | student number2 | name2 | student number3 | name3 | student number4 | name4 | is fulltime(y/n) | option2         | title | course code | capsize | enforce prereqs(y/n) | number of midterms | number of assignments | has a final(y/n) | is project course(y/n) | option3         | option4               |
       | "create student" |      101000001 | "S1" |       101000002 | "S2"  |       101000003 | "S3"  |       101000004 | "S4"  | "y"              | "create course" | "C1"  |      100000 |       2 | "n"                  |                  3 |                     5 | "y"              | "n"                    | "select course" | "register for course" |
 
-  Scenario Outline: S4 gets in C1 
+  Scenario Outline: Ex1 
     Given The registration period hasn't opened yet
     And Clerk logs into the ATC successfully.
     When Clerk enters create student <option1>
