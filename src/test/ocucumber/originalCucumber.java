@@ -96,7 +96,8 @@ public class originalCucumber {
 
 	@When("^Student enters student number (\\d+) and name \"([^\"]*)\"$")
 	public void student_enters_student_number_and_name(int arg1, String arg2) throws Throwable {
-		Client client = new Client(from,InputHandler.WAITING);
+		ServerThread student = null;
+		Client client = new Client(student,InputHandler.WAITING);
 		client.setStudentNumber(arg1);
 		clientList.add(index,client);
 		
