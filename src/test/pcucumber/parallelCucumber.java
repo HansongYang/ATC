@@ -153,12 +153,13 @@ public class parallelCucumber {
 		int count = 0;
 	    for(int i = 0; i < studentList.size(); i++) {
 	    	if(studentList.get(i).getRegisteredCourses().size() > 0) {
+	    		System.out.println(studentList.get(i).getStudentName());
 	    		count++;
 	    	}
 	    }
 	    if(count == 2) {
 	    	assertEquals(count, 2); //Total of two students register in this course successfully
-	    	System.out.println("EX1 passes!");
+	    
 	    } else {
 	    	assertTrue("EX1 fails", false);
 	    }
@@ -187,6 +188,7 @@ public class parallelCucumber {
 	    			first = i;
 	    		}
 	    		if(count == 2) {
+	    			
 	    			sn = studentList.get(i).getStudentNumber();
 	    		}
 	    	}
@@ -194,10 +196,10 @@ public class parallelCucumber {
 	  
 	    if(count == 2 && sn == clientList.get(clientList.size()-1).getStudentNumber() && studentList.get(first).getRegisteredCourses().size() > 0) {
 	    	assertTrue("S4 registers in this course", true);
-	    	System.out.println("EX2 passes");
+	    	System.out.println("S4 registers in this course");
 	    } else if (count == 2 && sn == clientList.get(clientList.size()-2).getStudentNumber() && studentList.get(first).getRegisteredCourses().size() > 0) {
 	    	assertTrue("S3 registers in this course", true);
-	    	System.out.println("EX2 passes");
+	    	System.out.println("S3 registers in this course");
 	    } else {
 	    	assertTrue("EX2 fails", false);
 	    }
@@ -221,7 +223,7 @@ public class parallelCucumber {
 	    }
 	    if(count == 3 && sn1 == clientList.get(clientList.size()-2).getStudentNumber() && sn2 ==  clientList.get(clientList.size()-1).getStudentNumber()) {
 	    	assertTrue("S3 and S4 register in this course", true);
-	    	System.out.println("EX2 passes.");
+	    	System.out.println("S3 and S4 register in this course.");
 	    } else {
 	    	assertTrue("EX2 fails.", false);
 	    }
