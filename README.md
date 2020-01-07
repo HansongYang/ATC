@@ -1,4 +1,4 @@
 # AcademicTracking
-a simple university academic tracking system
+A simple university academic tracking system
 
 
